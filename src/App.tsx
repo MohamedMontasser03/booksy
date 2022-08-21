@@ -1,9 +1,10 @@
 import { Banner } from "./components/banner/Banner";
 import { Header } from "./components/header/Header";
 import { Nav } from "./components/nav/Nav";
-import { useQuery } from "@tanstack/react-query";
-import { getCoverImage } from "./utils/image";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { BookTile } from "./components/book-tile/BookTile";
+import { useCallback, useEffect, useRef } from "react";
+import { useWindowScroll } from "./hooks/useWindowScroll";
 
 type Person = {
   birth_year: number | null;
@@ -33,13 +34,32 @@ type Response = {
 };
 
 function App() {
-  const { data, isLoading } = useQuery(["allBooks"], () =>
-    fetch("https://gutendex.com/books/?page=1").then<Response>((res) =>
-      res.json()
-    )
+  const booklistRef = useRef<HTMLDivElement>(null);
+
+  const { data, isLoading, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery(
+      ["allBooks"],
+      (next) =>
+        fetch(
+          next.pageParam?.page ?? "https://gutendex.com/books/?page=1"
+        ).then<Response>((res) => res.json()),
+      {
+        getNextPageParam: (lastPage) => ({ page: lastPage.next }),
+      }
+    );
+
+  useWindowScroll(
+    useCallback(() => {
+      if (!booklistRef.current || isFetchingNextPage || isLoading) return;
+      const booklistBox = booklistRef.current.getBoundingClientRect();
+      const threshold = booklistBox.height * 0.6;
+      const isReadyToFetch =
+        booklistBox.top < 0 && -booklistBox.top > threshold;
+      if (isReadyToFetch && data?.pages[data.pages.length - 1].next)
+        fetchNextPage();
+    }, [isLoading, isFetchingNextPage, data])
   );
 
-  if (isLoading) return <div>Loading...</div>;
   return (
     <div className="container mx-auto">
       <Header />
@@ -52,7 +72,7 @@ function App() {
                 Build your library
               </h2>
               <p className="text-lg font-medium text-neutral-400 w-4/5">
-                Buy two selected books and get one | free
+                Buy two selected books and get one for free
               </p>
               <button className="bg-red-300 hover:bg-red-400 transition-colors w-fit text-white rounded-lg px-5 py-2">
                 View all
@@ -70,11 +90,16 @@ function App() {
               View All
             </a>
           </div>
-          <div className="grid grid-cols-6 gap-10 mt-6">
-            {data?.results.map((book) => (
-              <BookTile key={book.id} book={book} />
-            ))}
+          <div className="grid grid-cols-6 gap-10 mt-6" ref={booklistRef}>
+            {data?.pages?.map((page) =>
+              page.results
+                .map((book) => <BookTile key={book.id} book={book} />)
+                .map((book) => book)
+            )}
           </div>
+          {(isFetchingNextPage || isLoading) && (
+            <div className="text-center mt-2">Loading...</div>
+          )}
         </section>
       </main>
     </div>

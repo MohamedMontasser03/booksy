@@ -39,6 +39,7 @@ export const BookTile: React.FC<BookTileProps> = ({ book }) => {
           {new Array(5).fill(0).map((_, idx) => (
             <Star
               strokeWidth={0}
+              key={idx}
               fill={idx + 1 <= stars ? "#ffc107" : "#dadada"}
             />
           ))}
