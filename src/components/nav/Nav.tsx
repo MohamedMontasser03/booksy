@@ -21,7 +21,7 @@ export const Nav: React.FC<NavProps> = ({ activePage }) => {
           active={activePage === "category"}
           title={
             <div className="flex items-center">
-              Category <ChevronDown size={18} />
+              Category <ChevronDown size={18} className="ml-2" />
             </div>
           }
         />
