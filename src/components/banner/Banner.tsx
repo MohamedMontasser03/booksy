@@ -7,7 +7,7 @@ type BannerProps = {
 export const Banner: React.FC<BannerProps> = ({ bgImage, alt, children }) => {
   return (
     <div className="flex items-center justify-between px-8 relative">
-      <img src={bgImage} alt={alt} className="w-full" />
+      <img src={bgImage} alt={alt} className="w-full min-w-[35rem]" />
       <div className="flex flex-col justify-center mx-8 p-16 absolute inset-0 h-full w-full">
         {children}
       </div>

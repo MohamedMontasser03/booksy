@@ -14,7 +14,7 @@ type NavProps = {
 export const Nav: React.FC<NavProps> = ({ activePage }) => {
   return (
     <nav>
-      <ul className="flex justify-center items-start gap-10 mt-4">
+      <ul className="flex justify-center items-start gap-2 md:gap-10 mt-4">
         <NavLink active={activePage === "home"} title="Home" />
         <NavLink active={activePage === "bestseller"} title="Bestseller" />
         <NavLink

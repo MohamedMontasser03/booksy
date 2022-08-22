@@ -19,7 +19,7 @@ export const BookTile: React.FC<BookTileProps> = ({ book }) => {
         <img
           src={getCoverImage(book.id)}
           alt={book.title}
-          className="w-[170px] h-[255px]"
+          className="w-full aspect-[2/3]"
         />
       </div>
       <div className="flex flex-col justify-between mt-3">

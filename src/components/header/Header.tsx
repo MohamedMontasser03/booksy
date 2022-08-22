@@ -4,7 +4,7 @@ export const Header: React.FC = () => {
   return (
     <header className="flex items-center justify-between flex-wrap p-6">
       <h1 className="App text-xl font-semibold basis-0 grow">Booksy</h1>
-      <div className="w-1/2 relative">
+      <div className="w-1/2 relative hidden md:block">
         <input
           className="bg-gray-100 appearance-none rounded w-full py-2 px-3 pr-12 text-gray-700 leading-tight focus:outline-none focus:shadow-outline placeholder:font-medium"
           type="text"
