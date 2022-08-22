@@ -1,4 +1,3 @@
-import { Book } from "../../App";
 import { getCoverImage } from "../../utils/image";
 import { Star } from "tabler-icons-react";
 import { useMemo } from "react";
